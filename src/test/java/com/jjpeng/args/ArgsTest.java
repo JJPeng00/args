@@ -18,6 +18,12 @@ public class ArgsTest {
         assertTrue(option.logging());
     }
 
+    @Test
+    public void should_set_boolean_option_to_true_if_flag_not_present() {
+        BooleanOption option = Args.parse(BooleanOption.class);
+        assertFalse(option.logging());
+    }
+
     static record BooleanOption(@Option("l") boolean logging) {}
     //TODO:  -int -p 8080
     //TODO:  -string -d /usr/logs
