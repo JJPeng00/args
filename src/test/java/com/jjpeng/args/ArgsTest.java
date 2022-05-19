@@ -12,6 +12,13 @@ public class ArgsTest {
     //在这个参数解析的例子中我们可以先考虑单个参数的情况再到多个参数的情况之后再处理sad path和默认值的需求
     //Single Option:
     //TODO:  -bool -l
+    @Test
+    public void should_set_boolean_option_to_true_if_flag_present() {
+        BooleanOption option = Args.parse(BooleanOption.class, "-l");
+        assertTrue(option.logging());
+    }
+
+    static record BooleanOption(@Option("l") boolean logging) {}
     //TODO:  -int -p 8080
     //TODO:  -string -d /usr/logs
     //TODO:  Multi options: -l -p 8080 -d /usr/logs
