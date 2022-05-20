@@ -22,6 +22,7 @@ public class Args {
     private static Object parseOption(Parameter parameter, List<String> arguments) {
         Object value = null;
         Option option = parameter.getAnnotation(Option.class);
+        //分支语句是一种面向对象误用的坏味道，可以利用多态替换掉条件分支
         if (parameter.getType() == boolean.class) {
             value = arguments.contains("-" + option.value());
         }
