@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class Args {
     public static <T> T parse(Class<T> optionsClass, String... args) {
@@ -20,22 +21,28 @@ public class Args {
     }
 
     private static Object parseOption(Parameter parameter, List<String> arguments) {
-        Object value = null;
-        Option option = parameter.getAnnotation(Option.class);
-        //分支语句是一种面向对象误用的坏味道，可以利用多态替换掉条件分支
-        if (parameter.getType() == boolean.class) {
-            BooleanOptionParser parser = new BooleanOptionParser();
-            value = parser.parse(arguments, option);
+
+        return getOptionParser(parameter.getType()).parse(arguments, parameter.getAnnotation(Option.class));
+    }
+
+    private static Map<Class<?>, OptionParser> PARSERS = Map.of(
+            boolean.class, new BooleanOptionParser(),
+            int.class, new IntOptionParser(),
+            String.class, new StringOptionParser());
+
+    //这是一个工厂模式，一般我们可以使用多态来实现？ 但是因为现在是java内置的类所以可以转换为查表的方式来替换这种方式
+    private static OptionParser getOptionParser(Class<?> type) {
+        OptionParser parser = null;
+        if (type == boolean.class) {
+            parser = new BooleanOptionParser();
         }
-        if (parameter.getType() == int.class) {
-            IntOptionParser parser = new IntOptionParser();
-            value = parser.parse(arguments, option);
+        if (type == int.class) {
+            parser = new IntOptionParser();
         }
-        if (parameter.getType() == String.class) {
-            StringOptionParser parser = new StringOptionParser();
-            value = parser.parse(arguments, option);
+        if (type == String.class) {
+            parser = new StringOptionParser();
         }
-        return value;
+        return parser;
     }
 
     interface OptionParser {
