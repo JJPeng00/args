@@ -24,16 +24,34 @@ public class Args {
         Option option = parameter.getAnnotation(Option.class);
         //分支语句是一种面向对象误用的坏味道，可以利用多态替换掉条件分支
         if (parameter.getType() == boolean.class) {
-            value = arguments.contains("-" + option.value());
+            value = parseBoolean(arguments, option);
         }
         if (parameter.getType() == int.class) {
-            int index = arguments.indexOf("-" + option.value());
-            value = Integer.parseInt(arguments.get(index + 1));
+            value = parseInt(arguments, option);
         }
         if (parameter.getType() == String.class) {
-            int index = arguments.indexOf("-" + option.value());
-            value = arguments.get(index + 1);
+            value = parseString(arguments, option);
         }
+        return value;
+    }
+
+    private static Object parseString(List<String> arguments, Option option) {
+        Object value;
+        int index = arguments.indexOf("-" + option.value());
+        value = arguments.get(index + 1);
+        return value;
+    }
+
+    private static Object parseInt(List<String> arguments, Option option) {
+        Object value;
+        int index = arguments.indexOf("-" + option.value());
+        value = Integer.parseInt(arguments.get(index + 1));
+        return value;
+    }
+
+    private static Object parseBoolean(List<String> arguments, Option option) {
+        Object value;
+        value = arguments.contains("-" + option.value());
         return value;
     }
 }
