@@ -11,7 +11,6 @@ public class ArgsTest {
     //任务分解：先考虑将一个复杂的任务拆分成多个正常的、显而易见的、简单的happy path的任务；在考虑不常见的边边角角的问题和sad path
     //在这个参数解析的例子中我们可以先考虑单个参数的情况再到多个参数的情况之后再处理sad path和默认值的需求
     //Single Option:
-    //TODO:  -bool -l
     @Test
     public void should_set_boolean_option_to_true_if_flag_present() {
         BooleanOption option = Args.parse(BooleanOption.class, "-l");
@@ -25,7 +24,14 @@ public class ArgsTest {
     }
 
     static record BooleanOption(@Option("l") boolean logging) {}
-    //TODO:  -int -p 8080
+
+    @Test
+    public void should_parse_int_as_option_value() {
+        IntOption option = Args.parse(IntOption.class, "-p", "8080");
+        assertEquals(8080, option.port());
+    }
+
+    static record IntOption(@Option("p") int port) {}
     //TODO:  -string -d /usr/logs
     //TODO:  Multi options: -l -p 8080 -d /usr/logs
     //Sad path:
