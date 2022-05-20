@@ -35,23 +35,42 @@ public class Args {
         return value;
     }
 
+    interface OptionParser {
+        Object parse(List<String> arguments, Option option);
+    }
     private static Object parseString(List<String> arguments, Option option) {
-        Object value;
-        int index = arguments.indexOf("-" + option.value());
-        value = arguments.get(index + 1);
-        return value;
+        return new StringOptionParser().parse(arguments, option);
     }
 
     private static Object parseInt(List<String> arguments, Option option) {
-        Object value;
-        int index = arguments.indexOf("-" + option.value());
-        value = Integer.parseInt(arguments.get(index + 1));
-        return value;
+        return new IntOptionParser().parse(arguments, option);
     }
 
     private static Object parseBoolean(List<String> arguments, Option option) {
-        Object value;
-        value = arguments.contains("-" + option.value());
-        return value;
+        return new BooleanOptionParser().parse(arguments, option);
+    }
+
+    static class BooleanOptionParser implements OptionParser {
+
+        @Override
+        public Object parse(List<String> arguments, Option option) {
+            return arguments.contains("-" + option.value());
+        }
+    }
+
+    static class IntOptionParser implements OptionParser {
+        @Override
+        public Object parse(List<String> arguments, Option option) {
+            int index = arguments.indexOf("-" + option.value());
+            return Integer.parseInt(arguments.get(index + 1));
+        }
+    }
+
+    static class StringOptionParser implements OptionParser{
+        @Override
+        public Object parse(List<String> arguments, Option option) {
+            int index = arguments.indexOf("-" + option.value());
+            return arguments.get(index + 1);
+        }
     }
 }
