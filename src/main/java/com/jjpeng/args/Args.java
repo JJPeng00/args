@@ -22,7 +22,7 @@ public class Args {
 
     private static Object parseOption(Parameter parameter, List<String> arguments) {
 
-        return getOptionParser(parameter.getType()).parse(arguments, parameter.getAnnotation(Option.class));
+        return PARSERS.get(parameter.getType()).parse(arguments, parameter.getAnnotation(Option.class));
     }
 
     private static Map<Class<?>, OptionParser> PARSERS = Map.of(
@@ -30,46 +30,4 @@ public class Args {
             int.class, new IntOptionParser(),
             String.class, new StringOptionParser());
 
-    //这是一个工厂模式，一般我们可以使用多态来实现？ 但是因为现在是java内置的类所以可以转换为查表的方式来替换这种方式
-    private static OptionParser getOptionParser(Class<?> type) {
-        OptionParser parser = null;
-        if (type == boolean.class) {
-            parser = new BooleanOptionParser();
-        }
-        if (type == int.class) {
-            parser = new IntOptionParser();
-        }
-        if (type == String.class) {
-            parser = new StringOptionParser();
-        }
-        return parser;
-    }
-
-    interface OptionParser {
-        Object parse(List<String> arguments, Option option);
-    }
-
-    static class BooleanOptionParser implements OptionParser {
-
-        @Override
-        public Object parse(List<String> arguments, Option option) {
-            return arguments.contains("-" + option.value());
-        }
-    }
-
-    static class IntOptionParser implements OptionParser {
-        @Override
-        public Object parse(List<String> arguments, Option option) {
-            int index = arguments.indexOf("-" + option.value());
-            return Integer.parseInt(arguments.get(index + 1));
-        }
-    }
-
-    static class StringOptionParser implements OptionParser{
-        @Override
-        public Object parse(List<String> arguments, Option option) {
-            int index = arguments.indexOf("-" + option.value());
-            return arguments.get(index + 1);
-        }
-    }
 }
