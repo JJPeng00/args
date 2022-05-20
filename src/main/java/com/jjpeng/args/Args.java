@@ -24,30 +24,22 @@ public class Args {
         Option option = parameter.getAnnotation(Option.class);
         //分支语句是一种面向对象误用的坏味道，可以利用多态替换掉条件分支
         if (parameter.getType() == boolean.class) {
-            value = parseBoolean(arguments, option);
+            BooleanOptionParser parser = new BooleanOptionParser();
+            value = parser.parse(arguments, option);
         }
         if (parameter.getType() == int.class) {
-            value = parseInt(arguments, option);
+            IntOptionParser parser = new IntOptionParser();
+            value = parser.parse(arguments, option);
         }
         if (parameter.getType() == String.class) {
-            value = parseString(arguments, option);
+            StringOptionParser parser = new StringOptionParser();
+            value = parser.parse(arguments, option);
         }
         return value;
     }
 
     interface OptionParser {
         Object parse(List<String> arguments, Option option);
-    }
-    private static Object parseString(List<String> arguments, Option option) {
-        return new StringOptionParser().parse(arguments, option);
-    }
-
-    private static Object parseInt(List<String> arguments, Option option) {
-        return new IntOptionParser().parse(arguments, option);
-    }
-
-    private static Object parseBoolean(List<String> arguments, Option option) {
-        return new BooleanOptionParser().parse(arguments, option);
     }
 
     static class BooleanOptionParser implements OptionParser {
