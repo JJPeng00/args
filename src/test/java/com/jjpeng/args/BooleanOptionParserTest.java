@@ -18,6 +18,16 @@ public class BooleanOptionParserTest {
         Assertions.assertEquals("l", e.getOption());
     }
 
+    //sad path: -l t f
+    @Test
+    public void should_not_accept_extra_arguments_for_boolean_option() {
+        TooManyArgumentException e = Assertions.assertThrows(TooManyArgumentException.class, () -> {
+            new BooleanOptionParser().parse(Arrays.asList("-l", "t", "f"), option("l"));
+        });
+
+        Assertions.assertEquals("l", e.getOption());
+    }
+
     static Option option(String value) {
         return new Option() {
 
