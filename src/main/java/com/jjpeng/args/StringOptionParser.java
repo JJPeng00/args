@@ -6,11 +6,12 @@ import java.util.function.Function;
 class StringOptionParser implements OptionParser {
     Function<String, Object> valueParser = String::valueOf;
 
-    public StringOptionParser() {
-    }
-
     public StringOptionParser(Function<String, Object> valueParser) {
         this.valueParser = valueParser;
+    }
+
+    public static OptionParser createStringOptionParser() {
+        return new StringOptionParser(String::valueOf);
     }
 
     @Override
