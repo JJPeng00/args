@@ -17,4 +17,24 @@ public class SingleValueOptionParserTest {
         Assertions.assertEquals("p", e.getOption());
     }
 
+    //sad path: -p
+    @Test
+    public void should_not_accept_insufficient_argument_for_single_value_option() {
+        InsufficientArgumentException e = Assertions.assertThrows(InsufficientArgumentException.class, () -> {
+            new SingleValueOptionParser<>(Integer::parseInt).parse(List.of("-p"), BooleanOptionParserTest.option("p"));
+        });
+
+        Assertions.assertEquals("p", e.getOption());
+    }
+
+    //sad path: -p -l
+    @Test
+    public void should_not_accept_insufficient_argument_with_other_argument_for_single_value_option() {
+        InsufficientArgumentException e = Assertions.assertThrows(InsufficientArgumentException.class, () -> {
+            new SingleValueOptionParser<>(Integer::parseInt).parse(List.of("-p", "-l"), BooleanOptionParserTest.option("p"));
+        });
+
+        Assertions.assertEquals("p", e.getOption());
+    }
+
 }
