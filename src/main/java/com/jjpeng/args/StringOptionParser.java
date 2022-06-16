@@ -4,14 +4,10 @@ import java.util.List;
 import java.util.function.Function;
 
 class StringOptionParser implements OptionParser {
-    Function<String, Object> valueParser = String::valueOf;
+    Function<String, Object> valueParser;
 
     public StringOptionParser(Function<String, Object> valueParser) {
         this.valueParser = valueParser;
-    }
-
-    public static OptionParser createStringOptionParser() {
-        return new StringOptionParser(String::valueOf);
     }
 
     @Override
