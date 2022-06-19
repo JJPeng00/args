@@ -1,4 +1,4 @@
-package com.jjpeng.args;
+package com.jjpeng.args.exceptions;
 
 public class TooManyArgumentException extends RuntimeException{
     private String option;

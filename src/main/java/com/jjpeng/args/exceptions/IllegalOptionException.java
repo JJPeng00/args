@@ -1,4 +1,4 @@
-package com.jjpeng.args;
+package com.jjpeng.args.exceptions;
 
 public class IllegalOptionException extends RuntimeException {
     private String parameter;

@@ -1,5 +1,7 @@
 package com.jjpeng.args;
 
+import com.jjpeng.args.exceptions.TooManyArgumentException;
+
 import java.util.List;
 
 class BooleanOptionParser implements OptionParser<Boolean> {

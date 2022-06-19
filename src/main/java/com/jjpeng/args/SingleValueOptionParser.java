@@ -1,5 +1,8 @@
 package com.jjpeng.args;
 
+import com.jjpeng.args.exceptions.InsufficientArgumentException;
+import com.jjpeng.args.exceptions.TooManyArgumentException;
+
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.IntStream;
@@ -24,7 +27,7 @@ class SingleValueOptionParser<T> implements OptionParser<T> {
 
         if (values.size() > 1) throw new TooManyArgumentException(option.value());
 
-        return valueParser.apply(arguments.get(index + 1));
+        return valueParser.apply(values.get(0));
     }
 
     private List<String> getValues(List<String> arguments, int index) {
