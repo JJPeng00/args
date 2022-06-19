@@ -42,4 +42,10 @@ public class SingleValueOptionParserTest {
         Assertions.assertEquals(0, new SingleValueOptionParser<Integer>(Integer::parseInt, (Integer) 0).parse(List.of(), BooleanOptionParserTest.option("p")));
     }
 
+    //happy path
+    @Test
+    public void should_parse_value_if_flag_present() {
+        Assertions.assertEquals(8080, new SingleValueOptionParser<Integer>(Integer::parseInt, (Integer) 0).parse(List.of("-p", "8080"), BooleanOptionParserTest.option("p")));
+    }
+
 }
