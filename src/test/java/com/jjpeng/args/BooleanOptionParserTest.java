@@ -35,6 +35,12 @@ public class BooleanOptionParserTest {
         Assertions.assertFalse(new BooleanOptionParser().parse(List.of(), option("l")));
     }
 
+    //happy path,与ArgsTest中happy path测试等同功能的测试
+    @Test
+    public void should_set_value_to_true_if_option_present() {
+        Assertions.assertTrue(new BooleanOptionParser().parse(List.of("-l"), option("l")));
+    }
+
     static Option option(String value) {
         return new Option() {
 
