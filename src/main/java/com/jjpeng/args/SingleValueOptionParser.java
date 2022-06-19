@@ -4,6 +4,7 @@ import com.jjpeng.args.exceptions.InsufficientArgumentException;
 import com.jjpeng.args.exceptions.TooManyArgumentException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
@@ -18,16 +19,23 @@ class SingleValueOptionParser<T> implements OptionParser<T> {
 
     @Override
     public T parse(List<String> arguments, Option option) {
+
+        return values(arguments, option, 1).map(it -> parseValue(it.get(0))).orElse(defaultValue);
+    }
+
+    static Optional<List<String>> values(List<String> arguments, Option option, int expectedSize) {
         int index = arguments.indexOf("-" + option.value());
-        if (index == -1) return defaultValue;
+        if (index == -1) return Optional.empty();
 
         List<String> values = getValues(arguments, index);
+        if (values.size() < expectedSize) throw new InsufficientArgumentException(option.value());
+        if (values.size() > expectedSize) throw new TooManyArgumentException(option.value());
+        return Optional.of(values);
 
-        if (values.size() < 1) throw new InsufficientArgumentException(option.value());
+    }
 
-        if (values.size() > 1) throw new TooManyArgumentException(option.value());
-
-        return valueParser.apply(values.get(0));
+    private T parseValue(String value) {
+        return valueParser.apply(value);
     }
 
     static List<String> getValues(List<String> arguments, int index) {
