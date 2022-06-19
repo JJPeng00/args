@@ -11,7 +11,7 @@ public class SingleValueOptionParserTest {
     @Test
     public void should_not_accept_extra_argument_for_single_value_option() {
         TooManyArgumentException e = Assertions.assertThrows(TooManyArgumentException.class, () -> {
-            new SingleValueOptionParser<>(Integer::parseInt).parse(List.of("-p", "8080", "8081"), BooleanOptionParserTest.option("p"));
+            new SingleValueOptionParser<Integer>(Integer::parseInt, (Integer) 0).parse(List.of("-p", "8080", "8081"), BooleanOptionParserTest.option("p"));
         });
 
         Assertions.assertEquals("p", e.getOption());
@@ -21,7 +21,7 @@ public class SingleValueOptionParserTest {
     @Test
     public void should_not_accept_insufficient_argument_for_single_value_option() {
         InsufficientArgumentException e = Assertions.assertThrows(InsufficientArgumentException.class, () -> {
-            new SingleValueOptionParser<>(Integer::parseInt).parse(List.of("-p"), BooleanOptionParserTest.option("p"));
+            new SingleValueOptionParser<Integer>(Integer::parseInt, (Integer) 0).parse(List.of("-p"), BooleanOptionParserTest.option("p"));
         });
 
         Assertions.assertEquals("p", e.getOption());
@@ -31,10 +31,15 @@ public class SingleValueOptionParserTest {
     @Test
     public void should_not_accept_insufficient_argument_with_other_argument_for_single_value_option() {
         InsufficientArgumentException e = Assertions.assertThrows(InsufficientArgumentException.class, () -> {
-            new SingleValueOptionParser<>(Integer::parseInt).parse(List.of("-p", "-l"), BooleanOptionParserTest.option("p"));
+            new SingleValueOptionParser<Integer>(Integer::parseInt, (Integer) 0).parse(List.of("-p", "-l"), BooleanOptionParserTest.option("p"));
         });
 
         Assertions.assertEquals("p", e.getOption());
+    }
+
+    @Test
+    public void should_set_default_value_to_0_for_int_option() {
+        Assertions.assertEquals(0, new SingleValueOptionParser<Integer>(Integer::parseInt, (Integer) 0).parse(List.of(), BooleanOptionParserTest.option("p")));
     }
 
 }
