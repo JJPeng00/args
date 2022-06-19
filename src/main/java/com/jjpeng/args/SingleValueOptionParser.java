@@ -16,10 +16,25 @@ class SingleValueOptionParser<T> implements OptionParser<T> {
     public T parse(List<String> arguments, Option option) {
         int index = arguments.indexOf("-" + option.value());
         if (index == -1) return defaultValue;
-        if (index + 1 == arguments.size() ||
-                arguments.get(index + 1).startsWith("-")) throw new InsufficientArgumentException(option.value());
-        if (index + 2 < arguments.size() &&
-                !arguments.get(index + 2).startsWith("-")) throw new TooManyArgumentException(option.value());
+
+        if (isReachEndOfList(arguments, index) ||
+                isFollowedByOtherFlag(arguments, index)) throw new InsufficientArgumentException(option.value());
+
+        if (nextArgumentIsNotAFlag(arguments, index)) throw new TooManyArgumentException(option.value());
+
         return valueParser.apply(arguments.get(index + 1));
+    }
+
+    private boolean nextArgumentIsNotAFlag(List<String> arguments, int index) {
+        return index + 2 < arguments.size() &&
+                !arguments.get(index + 2).startsWith("-");
+    }
+
+    private boolean isFollowedByOtherFlag(List<String> arguments, int index) {
+        return arguments.get(index + 1).startsWith("-");
+    }
+
+    private boolean isReachEndOfList(List<String> arguments, int index) {
+        return index + 1 == arguments.size();
     }
 }
