@@ -14,7 +14,7 @@ public class BooleanOptionParserTest {
     @Test
     public void should_not_accept_extra_argument_for_boolean_option() {
         TooManyArgumentException e = Assertions.assertThrows(TooManyArgumentException.class, () -> {
-            new BooleanOptionParser().parse(Arrays.asList("-l", "t"), option("l"));
+            SingleValueOptionParser.bool().parse(Arrays.asList("-l", "t"), option("l"));
         });
 
         Assertions.assertEquals("l", e.getOption());
@@ -24,7 +24,7 @@ public class BooleanOptionParserTest {
     @Test
     public void should_not_accept_extra_arguments_for_boolean_option() {
         TooManyArgumentException e = Assertions.assertThrows(TooManyArgumentException.class, () -> {
-            new BooleanOptionParser().parse(Arrays.asList("-l", "t", "f"), option("l"));
+            SingleValueOptionParser.bool().parse(Arrays.asList("-l", "t", "f"), option("l"));
         });
 
         Assertions.assertEquals("l", e.getOption());
@@ -33,13 +33,13 @@ public class BooleanOptionParserTest {
     //default
     @Test
     public void should_set_default_value_to_false_if_not_present() {
-        Assertions.assertFalse(new BooleanOptionParser().parse(List.of(), option("l")));
+        Assertions.assertFalse(SingleValueOptionParser.bool().parse(List.of(), option("l")));
     }
 
     //happy path,与ArgsTest中happy path测试等同功能的测试
     @Test
     public void should_set_value_to_true_if_option_present() {
-        Assertions.assertTrue(new BooleanOptionParser().parse(List.of("-l"), option("l")));
+        Assertions.assertTrue(SingleValueOptionParser.bool().parse(List.of("-l"), option("l")));
     }
 
     static Option option(String value) {
